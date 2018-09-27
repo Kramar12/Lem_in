@@ -1,6 +1,6 @@
 #include "lem_in.h"
 
-int         is_nums(char *s)
+int         are_nums(char *s)
 {
     if (!s)
         return (-1);
@@ -31,6 +31,10 @@ void        fill_mroom(t_lemin *lemin, int code)
         lemin->start->name = split[0];
         lemin->start->x = ft_atoi(split[1]);
         lemin->start->y = ft_atoi(split[2]);
+        lemin->start->isfull = -1;
+        lemin->start->prev = NULL;
+        lemin->start->next = NULL;
+		lemin->start->link_with = NULL;
     }
     else if (!lemin->end)
     {
@@ -38,12 +42,25 @@ void        fill_mroom(t_lemin *lemin, int code)
         lemin->end->name = split[0];
         lemin->end->x = ft_atoi(split[1]);
         lemin->end->y = ft_atoi(split[2]);
+		lemin->end->isfull = -1;
+		lemin->end->prev = NULL;
+		lemin->end->next = NULL;
+		lemin->start->link_with = NULL;
     }
 }
 
 void        fill_links(t_lemin *lemin, char *line)
 {
-
+	static int 	count;
+	
+	if (!lemin->links)
+	{
+		lemin->links = (char **) malloc(sizeof(char *) * 32);
+		count = 0;
+	}
+	lemin->links[count] = ft_strdup(line);
+	lemin->links[count + 1] = NULL;
+	count++;
 }
 
 void        fill_rooms(t_lemin *lemin, char *line)
@@ -68,6 +85,7 @@ void        fill_rooms(t_lemin *lemin, char *line)
         lemin->rooms = (t_room *)malloc(sizeof(t_room));
         lemin->rooms->name = NULL;
         lemin->rooms->prev = temp;
+        lemin->rooms->prev->next = lemin->rooms;
     }
     if (!lemin->rooms->name)
     {
@@ -84,24 +102,26 @@ void        fill_rooms(t_lemin *lemin, char *line)
 void        parse_rooms(t_lemin *lemin)
 {
     char    *line;
-    int     knife_switch;
+    int     c;
     
+    c = 0;
     lemin->ants = 0;
     while (gnl(0, &line))
     {
-        if (!line || (*line == '\n' && *(line + 1) == '\0'))
+        if (!line || !(*line) || (*line == '\n' && *(line + 1) == '\0'))
             break ;
-        if (*line == '#' && *(line + 1) != '#')
+        else if (*line == '#' && *(line + 1) != '#')
             continue ;
-        if (!lemin->ants && is_nums(line))
+        else if (!lemin->ants && are_nums(line))
             lemin->ants = ft_atoi(line);
-        if (!ft_strcmp((line), "##start") || !ft_strcmp((line), "##end"))
+        else if (!ft_strcmp((line), "##start") || !ft_strcmp((line), "##end"))
             fill_mroom(lemin, !ft_strcmp((line), "##start") ? 1 : 0);
-        if (*line != '#' && !ft_strchr(line, ' '))
+        else if (*line != '#' && !ft_strchr(line, ' '))
             fill_links(lemin, line);
         else
             fill_rooms(lemin, line);
     }
+    get_ways(lemin);
 }
 
 int main(void)
@@ -109,10 +129,11 @@ int main(void)
     char    *line;
 
     t_lemin     lemin;
-
-    lemin = (t_lemin){0, 0, NULL, NULL, NULL};
+//	dup2(open(av[1], O_RDONLY), 0);
+    lemin = (t_lemin){0, 0, NULL, NULL, NULL, NULL, NULL};
     parse_rooms(&lemin);
-    gnl(0, &line);
+//    gnl(0, &line);
+
     printf("%s", line);
 
     return 0;
