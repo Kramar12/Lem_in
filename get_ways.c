@@ -76,6 +76,7 @@ t_room 		*cp_room(t_room *room)
 	ret->link_with = NULL;
 	ret->x = room->x;
 	ret->y = room->y;
+	ret->isvisited = room->isvisited;
 	return(ret);
 }
 
@@ -118,6 +119,7 @@ int 		concat_way(t_lemin *lemin, t_room *add)
 	return (1);
 }
 
+// isvisited
 void 		get_ways(t_lemin *lemin)
 {
 	int 	i;

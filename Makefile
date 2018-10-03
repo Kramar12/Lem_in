@@ -6,7 +6,7 @@
 #    By: ariabyi <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/11 15:21:59 by ariabyi           #+#    #+#              #
-#    Updated: 2018/09/26 12:56:23 by ariabyi          ###   ########.fr        #
+#    Updated: 2018/09/30 16:32:41 by ariabyi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 
 CC = gcc
 NAME = lem_in
-SRC = main.c
+SRC = main.c get_ways.c
 
 CFLAGS = #-Wall -Wextra -Werror
 HEADER = -I ./header
