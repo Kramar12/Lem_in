@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/Lem_in.dir/main.c.o"
   "CMakeFiles/Lem_in.dir/get_ways.c.o"
+  "CMakeFiles/Lem_in.dir/trash.c.o"
   "Lem_in.pdb"
   "Lem_in"
 )

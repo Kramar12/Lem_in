@@ -1,21 +1,46 @@
 #include "lem_in.h"
 
-
+// ищет комнату по имени в главной структуре и возвращает комнату если нашёл, в другом случае ноль
 t_room		*get_room_by_name(t_lemin *lemin, char *name)
 {
-	if (!lemin || !name)
+	t_room	*temp;
+	
+	if (!lemin || !name || !lemin->rooms)
 		return (NULL);
 	while (lemin->rooms->prev)
 		lemin->rooms = lemin->rooms->prev;
+	temp = lemin->rooms;
 	while (lemin->rooms)
 	{
 		if (!ft_strcmp(lemin->rooms->name, name))
 			return (lemin->rooms);
 		lemin->rooms = lemin->rooms->next;
 	}
+	lemin->rooms = temp;
 	return (NULL);
 }
 
+t_room		*get_room_by_num(t_lemin *lemin, int num)
+{
+	t_room	*temp;
+	
+	if (!lemin || !lemin->rooms || num < 0)
+		return (NULL);
+	while (lemin->rooms->prev)
+		lemin->rooms = lemin->rooms->prev;
+	temp = lemin->rooms;
+	while (lemin->rooms)
+	{
+		if (lemin->rooms->num == num)
+			return (lemin->rooms);
+		lemin->rooms = lemin->rooms->next;
+	}
+	lemin->rooms = temp;
+	return (NULL);
+}
+
+// ищет комнату по имени в путе главной структуре и возвращает комнату если нашёл, в другом случае ноль
+// функция создана для проверки на повторения в пути
 t_room		*get_room_by_name_in_way(t_lemin *lemin, char *name)
 {
 	t_room		*temp;
@@ -35,33 +60,7 @@ t_room		*get_room_by_name_in_way(t_lemin *lemin, char *name)
 	return (NULL);
 }
 
-char 		*get_second(char *line, char *s1)
-{
-	int 	i;
-	
-	char 	*temp; // delete
-	i = 0;
-	if (!line || !s1)
-		return (NULL);
-	while (line[i] == *s1)
-	{
-		i++;
-		s1++;
-	}
-	//uncomment belove and delete under comments till return, and delete *temp
-//	if (!*s1 && line[i] == '-') // get 2nd
-//		return (ft_strsub(line, (unsigned)ft_strpos(line, '-'), (ft_strlen(line) - ft_strpos(line, '-'))));
-//	else
-//		return (ft_strsub(line, 0, (ft_strlen(line) - (ft_strlen(line) - ft_strpos(line, '-')))));
-	
-	if (!*s1 && line[i] == '-') // get 2nd
-		temp = (ft_strsub(line, ((unsigned)ft_strpos(line, '-') + 1), (ft_strlen(line) - ft_strpos(line, '-'))));
-	else
-		temp = (ft_strsub(line, 0, (ft_strlen(line) - (ft_strlen(line) - ft_strpos(line, '-')))));
-	
-	return (temp);
-}
-
+// копирует комнату которую мы даем как аргумент, при этом выделяя для неё память
 t_room 		*cp_room(t_room *room)
 {
 	t_room	*ret;
@@ -77,25 +76,25 @@ t_room 		*cp_room(t_room *room)
 	ret->x = room->x;
 	ret->y = room->y;
 	ret->isvisited = room->isvisited;
+	ret->num = room->num;
 	return(ret);
 }
 
-t_room 		*get_con_start(t_lemin *lemin, char *name, int *j)
+//
+t_room 		*get_con_start(t_lemin *lemin, int num, int *j)
 {
-	if (!lemin->links)
-		exit ((int)write(1, "ERROR\n", 6) * 0 + 1);
-	while (lemin->links[*j])
+	while(*j < lemin->num_rooms)
 	{
-		if (ft_strstr(lemin->links[*j], name) && !get_room_by_name_in_way(lemin, get_second(lemin->links[*j], name)))
+		if (lemin->mat[num][*j])
 		{
-//			(*j)++;
-			return (cp_room(get_room_by_name(lemin, get_second(lemin->links[(*j)++], name))));
+			return (cp_room(get_room_by_num(lemin, *j)));
 		}
 		(*j)++;
 	}
 	return (NULL);
 }
 
+// кидает комнату в продолжение пути
 int 		concat_way(t_lemin *lemin, t_room *add)
 {
 	t_room		*temp;
@@ -144,7 +143,7 @@ void 		get_ways(t_lemin *lemin)
 		lemin->way->prev->next = lemin->way;
 	}
 	lemin->way->rooms = cp_room(lemin->start);
-	while (ft_strcmp(lemin->way->rooms->name, lemin->end->name) && kata)
-		kata = concat_way(lemin, get_con_start(lemin, lemin->way->rooms->name, &i));
+	while ((lemin->way->rooms->num != lemin->end->num) && kata)
+		kata = concat_way(lemin, get_con_start(lemin, lemin->way->rooms->num, &i));
 	concat_way(lemin, cp_room(lemin->end));
 }

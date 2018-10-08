@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/Users/ariabyi/CLionProjects/Lem_in/get_ways.c
-lem_in.h
-/Users/ariabyi/CLionProjects/Lem_in/lem_in.h
-
 /Users/ariabyi/CLionProjects/Lem_in/lem_in.h
 stdio.h
 -
@@ -40,7 +36,7 @@ fcntl.h
 stdlib.h
 -
 
-/Users/ariabyi/CLionProjects/Lem_in/main.c
+/Users/ariabyi/CLionProjects/Lem_in/trash.c
 lem_in.h
 /Users/ariabyi/CLionProjects/Lem_in/lem_in.h
 

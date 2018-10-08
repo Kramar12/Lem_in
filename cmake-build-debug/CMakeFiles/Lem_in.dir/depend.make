@@ -9,3 +9,7 @@ CMakeFiles/Lem_in.dir/main.c.o: ../lem_in.h
 CMakeFiles/Lem_in.dir/main.c.o: ../libft/libft.h
 CMakeFiles/Lem_in.dir/main.c.o: ../main.c
 
+CMakeFiles/Lem_in.dir/trash.c.o: ../lem_in.h
+CMakeFiles/Lem_in.dir/trash.c.o: ../libft/libft.h
+CMakeFiles/Lem_in.dir/trash.c.o: ../trash.c
+

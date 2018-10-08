@@ -177,6 +177,33 @@ main.c.s:
 	$(MAKE) -f CMakeFiles/Lem_in.dir/build.make CMakeFiles/Lem_in.dir/main.c.s
 .PHONY : main.c.s
 
+trash.o: trash.c.o
+
+.PHONY : trash.o
+
+# target to build an object file
+trash.c.o:
+	$(MAKE) -f CMakeFiles/Lem_in.dir/build.make CMakeFiles/Lem_in.dir/trash.c.o
+.PHONY : trash.c.o
+
+trash.i: trash.c.i
+
+.PHONY : trash.i
+
+# target to preprocess a source file
+trash.c.i:
+	$(MAKE) -f CMakeFiles/Lem_in.dir/build.make CMakeFiles/Lem_in.dir/trash.c.i
+.PHONY : trash.c.i
+
+trash.s: trash.c.s
+
+.PHONY : trash.s
+
+# target to generate assembly for a file
+trash.c.s:
+	$(MAKE) -f CMakeFiles/Lem_in.dir/build.make CMakeFiles/Lem_in.dir/trash.c.s
+.PHONY : trash.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -192,6 +219,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... trash.o"
+	@echo "... trash.i"
+	@echo "... trash.s"
 .PHONY : help
 
 

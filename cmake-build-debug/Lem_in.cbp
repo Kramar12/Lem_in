@@ -87,6 +87,9 @@
 		<Unit filename="/Users/ariabyi/CLionProjects/Lem_in/main.c">
 			<Option target="Lem_in"/>
 		</Unit>
+		<Unit filename="/Users/ariabyi/CLionProjects/Lem_in/trash.c">
+			<Option target="Lem_in"/>
+		</Unit>
 		<Unit filename="/Users/ariabyi/CLionProjects/Lem_in/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

@@ -1,5 +1,26 @@
 #include "lem_in.h"
 
+void 	printss(int **max, int y, int x, int yc, int xc)
+{
+	int 	i = 0, j = 0;
+	if (!max)
+		return;
+	while (i < y)
+	{
+		j = 0;
+		while (j < x)
+		{
+			if (i == yc && j == xc)
+				printf("%s%3d%s",RED,  max[i][j],RESET);
+			else
+				printf("%3d", max[i][j]);
+			j++;
+		}
+		printf("\n");
+		i++;
+	}
+}
+
 int         are_nums(char *s)
 {
     if (!s)
@@ -35,6 +56,7 @@ void        fill_mroom(t_lemin *lemin, int code)
         lemin->start->prev = NULL;
         lemin->start->next = NULL;
 		lemin->start->link_with = NULL;
+		lemin->start->num = lemin->num_rooms++;
     }
     else if (!lemin->end)
     {
@@ -45,22 +67,72 @@ void        fill_mroom(t_lemin *lemin, int code)
 		lemin->end->isfull = -1;
 		lemin->end->prev = NULL;
 		lemin->end->next = NULL;
-		lemin->start->link_with = NULL;
+		lemin->end->link_with = NULL;
+		lemin->end->num = lemin->num_rooms++;
     }
 }
 
+int         get_room_num(t_lemin *lemin, char *name)
+{
+    t_room *temp;
+    
+    if (!ft_strcmp(name, "2"))
+        lemin->end->prev = NULL;
+    if (!(temp = get_room_by_name(lemin, name)))
+    {
+        if (!ft_strcmp(lemin->start->name, name))
+            temp = lemin->start;
+        else if (!ft_strcmp(lemin->end->name, name))
+            temp = lemin->end;
+        else
+            return (-1);
+    }
+    return (temp->num);
+}
+
+// добавить проверки
+void        get_nums_links(t_lemin *lemin, char *line, int *x, int *y)
+{
+    char *first;
+    char *secnd;
+    int len;
+    
+    len = ft_strpos(line, '-');
+    secnd = ft_memalloc((size_t)len);
+    secnd = ft_strncpy(secnd, line, len);
+    first = ft_strdup(ft_strchr(line, '-') + 1);
+    *x = get_room_num(lemin, first);
+    *y = get_room_num(lemin, secnd);
+}
+
+// добавить проверки
 void        fill_links(t_lemin *lemin, char *line)
 {
-	static int 	count;
-	
-	if (!lemin->links)
-	{
-		lemin->links = (char **) malloc(sizeof(char *) * 32);
-		count = 0;
-	}
-	lemin->links[count] = ft_strdup(line);
-	lemin->links[count + 1] = NULL;
-	count++;
+    int     i;
+    int     x_temp;
+    int     y_temp;
+    int 	j;
+    
+    i = 0;
+    if (!lemin->mat)
+    {
+        lemin->mat = (int **) malloc(sizeof(int *) * (lemin->num_rooms + 2));
+        while (i < (lemin->num_rooms + 2))
+        {
+        	j = (lemin->num_rooms) + 2;
+            lemin->mat[i] = (int *) malloc(sizeof(int) * (lemin->num_rooms + 2));
+            while(j--)
+				lemin->mat[i][j] = 0;
+            i++;
+        }
+        printss(lemin->mat, (lemin->num_rooms + 2), (lemin->num_rooms + 2), 0, 0);
+    }
+    
+    get_nums_links(lemin, line, &x_temp, &y_temp);
+    if (y_temp == -1 || x_temp == -1)
+		return;
+    lemin->mat[y_temp][x_temp] = 1;
+    lemin->mat[x_temp][y_temp] = 1;
 }
 
 void        fill_rooms(t_lemin *lemin, char *line)
@@ -95,10 +167,59 @@ void        fill_rooms(t_lemin *lemin, char *line)
         lemin->rooms->x = ft_atoi(split[1]);
         lemin->rooms->y = ft_atoi(split[2]);
         lemin->rooms->next = NULL;
-        lemin->num_rooms++;
+        lemin->rooms->num = lemin->num_rooms++;
     }
 }
 
+
+
+void 		get_all_ways(t_lemin *lemin)
+{
+	int 	*arr;
+	int 	i;
+	int 	ret;
+	int 	c;
+	
+	c = 0;
+	ret = 0;
+	i = 0;
+	arr = (int *)malloc(sizeof(int) * (lemin->num_rooms + 1));
+	ft_bzero(arr, ((size_t)lemin->num_rooms + 1));
+
+	while (i < lemin->num_rooms + 1)
+	{
+		c = 0;
+		while (c < lemin->num_rooms)
+		{
+			arr[i] += lemin->mat[i][c];
+			c++;
+		}
+		i++;
+	}
+	arr[i] = -1;
+//	i = 0;
+//	printf("\n");
+//	while (arr[i] != -1)
+//	{
+//		printf("arr[%d] = %d\n", i , arr[i]);
+//		i++;
+//	}
+	i = 0;
+	int 	temp;
+	
+	temp = 0;
+	while (arr[i] != -1)
+	{
+		while (arr[i]--)
+		{
+			get_ways(lemin);
+			print_way(lemin);
+		}
+		i++;
+	}
+}
+
+// добавить матрицу смежностей
 void        parse_rooms(t_lemin *lemin)
 {
     char    *line;
@@ -108,6 +229,8 @@ void        parse_rooms(t_lemin *lemin)
     lemin->ants = 0;
     while (gnl(0, &line))
     {
+        if (!ft_strncmp("5", line, 1))
+            line = line;
         if (!line || !(*line) || (*line == '\n' && *(line + 1) == '\0'))
             break ;
         else if (*line == '#' && *(line + 1) != '#')
@@ -120,8 +243,11 @@ void        parse_rooms(t_lemin *lemin)
             fill_links(lemin, line);
         else
             fill_rooms(lemin, line);
+        ft_strdel(&line);
     }
-    get_ways(lemin);
+//    make_mat(lemin);
+	printss(lemin->mat, (lemin->num_rooms + 2), (lemin->num_rooms + 2), 0, 0);
+    get_all_ways(lemin);
 }
 
 int main(void)
@@ -134,7 +260,6 @@ int main(void)
     parse_rooms(&lemin);
 //    gnl(0, &line);
 
-    printf("%s", line);
 
     return 0;
 }

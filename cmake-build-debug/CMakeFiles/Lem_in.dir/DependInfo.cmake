@@ -6,6 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_C
   "/Users/ariabyi/CLionProjects/Lem_in/get_ways.c" "/Users/ariabyi/CLionProjects/Lem_in/cmake-build-debug/CMakeFiles/Lem_in.dir/get_ways.c.o"
   "/Users/ariabyi/CLionProjects/Lem_in/main.c" "/Users/ariabyi/CLionProjects/Lem_in/cmake-build-debug/CMakeFiles/Lem_in.dir/main.c.o"
+  "/Users/ariabyi/CLionProjects/Lem_in/trash.c" "/Users/ariabyi/CLionProjects/Lem_in/cmake-build-debug/CMakeFiles/Lem_in.dir/trash.c.o"
   )
 set(CMAKE_C_COMPILER_ID "AppleClang")
 
